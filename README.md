@@ -1,164 +1,131 @@
 # GMR Sensor System [MORA-UIN]
 
-Repositori ini mendokumentasikan sistem sensor magnetoresistif raksasa (GMR) yang dikembangkan untuk pengukuran medan magnet real-time. Proyek ini mencakup dua versi kit eksperimen, perangkat lunak akuisisi data terkalibrasi, hasil validasi, dan dokumentasi mekanis-elektris lengkap.
+Real-time Giant Magnetoresistance sensor system for calibrated magnetic field measurement. Two kit variants, Python GUIs, MQTT IoT interface, and machine learning pipelines — built with Arduino + ADS1115.
 
-## Ringkasan Proyek
+![Interface Preview](src/img/interface.png)
 
-Sistem GMR Sensor System [MORA-UIN] dikembangkan sebagai alat penelitian dan kalibrasi medan magnet untuk aplikasi pendidikan dan laboratorium. Proyek ini terdiri dari:
+---
 
-- Versi pertama: `GMR-UIN-R1A` (biru), dikembangkan di CV. Bolabot Techno Robotic Institute.
-- Versi kedua: `GMR-UIN-R1B` (kuning), dikembangkan di Laboratorium Fisika Material UIN Sunan Gunung Djati Bandung.
-- Program Arduino utama: `main.ino` untuk kedua versi sistem.
-- Alat kalibrasi: `magnetic_field_calibration.py` dan `output-template.xlsx`.
-- Dokumentasi desain: skematik, desain mekatronika, buku manual, dan file desain PCB.
+## Hardware Variants
 
-## Highlight Proyek
+| Variant | Series | Color | Developed At |
+|---------|--------|-------|-------------|
+| **GMR-UIN-R1A** | 1A | Blue | CV. Bolabot Techno Robotic Institute |
+| **GMR-UIN-R1B** | 1B | Yellow | Lab. Fisika Material, UIN Bandung |
 
-- Sistem GMR real-time dengan pengukuran medan magnet terkalibrasi.
-- Dua versi kit eksperimen: R1A biru (CV. Bolabot Techno Robotic Institute) dan R1B kuning (Laboratorium Fisika Material UIN Bandung).
-- Integrasi hardware Arduino + ADS1115 dengan perangkat lunak Python untuk GUI dan analisis.
-- Dukungan validasi data dan dokumentasi lengkap untuk riset dan kalibrasi lapangan.
-- Kompatibel dengan lingkungan Windows, Linux, dan Raspbian.
-- Dokumentasi lengkap meliputi skematik elektronik, desain mekatronika, buku manual, dan desain PCB.
+Identical in circuitry and firmware; differs only in series designation and enclosure color.
 
-## Struktur Repositori
+---
 
-- `src/`
-  - `GMR-mechatronics.jpg` — foto atau ilustrasi desain mekanika sistem.
-  - `GMR-schematics.jpg` — gambar skematik rangkaian elektronik.
-  - `manual-book-GMR-UIN-MORA.pdf` — buku manual penggunaan dan instalasi.
-  - `print_PCB_GMR_AAL024-10E_Arduino.fzz` — desain PCB untuk pencetakan.
-  - `print_PCB_GMR_AAL024-10E_Arduino_pcb.png` — tampilan layout PCB.
-- `GMR-UIN-R1A/`
-  - `GMR-UIN-R1A-Data-Acquisition.py` — perangkat lunak GUI Python terkalibrasi untuk akuisisi data medan magnet real-time.
-  - `src/` — folder pendukung untuk R1A.
-- `GMR-UIN-R1B/`
-  - `GMR-UIN-R1B-Data-Acquisition.py` — perangkat lunak GUI Python terkalibrasi untuk akuisisi data medan magnet real-time.
-  - `src/` — folder pendukung untuk R1B.
-- `main.ino` — program Arduino utama untuk kedua versi sistem.
-- `magnetic_field_calibration.py` — skrip kalibrasi utama dengan kemampuan analisis sensitivitas dan parameter kalibrasi.
-- `output-template.xlsx` — template output kalibrasi/data yang digunakan bersama skrip kalibrasi.
+## Repository Structure
 
-## Desain Elektronik dan Mekatronika
+```
+.
+├── main.ino                         # Arduino firmware (ADS1115 reader)
+├── magnetic_field_calibration.py    # Calibration script
+├── output-template.xlsx             # Excel calibration template
+│
+├── GMR-UIN-R1A/                     # Blue kit
+│   ├── GMR-UIN-R1A-Data-Acquisition.py
+│   ├── src/                         # Calibration data, graphs
+│   │   ├── r1a_calibration_report.xlsx
+│   │   ├── r1a_calibration-graph.png
+│   │   ├── r1a_regression-plot.png
+│   │   ├── raw-data/                # (15 xlsx files, 1V–15V)
+│   │   └── raw-b-data/              # (15 xlsx files, 1V–15V)
+│   └── MQTT-interface/
+│       ├── README.md
+│       ├── 1.0.0/                   # Initial publisher & subscriber
+│       ├── 1.0.0.f/                 # Feature-update patch
+│       └── 1.1.0/                   # Latest patch
+│
+├── GMR-UIN-R1B/                     # Yellow kit
+│   ├── GMR-UIN-R1B-Data-Acquisition.py
+│   ├── src/
+│   │   ├── r1b_calibration.png
+│   │   ├── r1b_regression-plot.png
+│   │   ├── r1b-calibration_report.xlsx
+│   │   ├── raw_data/V_Helmholtz/    # (14 xlsx, 3V–16V)
+│   │   └── raw-b-data/              # (13 xlsx, 3V–15V)
+│   └── MQTT-interface/
+│       ├── README.md
+│       └── 1.1.0/                   # Publisher & subscriber
+│
+├── src/
+│   ├── img/interface.png
+│   ├── GMR-mechatronics.jpg
+│   ├── manual-book-GMR-UIN-MORA.pdf
+│   ├── schematic/                   # Schematics, PCB layout
+│   └── docs/                        # Technical documentation
+│
+└── misc/
+    ├── gui-prototype/               # 0.1.0 and 0.1.1 interface drafts
+    └── machine-learning/
+        ├── GMR_RF_glucose_monohydrate/          # RF regression (no GOx)
+        ├── GMR_RF_GOx_Glucose Monohydrate/      # RF regression (with GOx)
+        └── GMR_SVR-KNN-RF-Fe3O4/                # SVR / KNN / RF / LR models
+```
 
-### Skematik
+---
 
-![Skematik GMR](src/GMR-schematics.jpg)
+## Quick Start
 
-Skematik ini menampilkan rangkaian pembacaan sensor GMR, konverter ADS1115, dan antarmuka serial ke Arduino. Komponen inti meliputi sensor GMR, modul ADS1115, serta komunikasi data ke host PC untuk akuisisi dan visualisasi.
+### 1. Arduino Firmware
 
-### Desain Mekatronika
+Upload `main.ino` to your board. It reads the GMR sensor via ADS1115 (I²C) and outputs voltage over serial at 9600 baud.
 
-![Desain Mekatronika GMR](src/GMR-mechatronics.jpg)
+### 2. Data Acquisition GUI
 
-Desain mekanis membantu penempatan sensor, struktur fixturing, dan integrasi elemen elektronik di dalam kit eksperimen. Dokumentasi ini menunjukkan tata letak perangkat dan dukungan pengukuran stabil.
+Pick your kit and run:
 
-## Rincian Setiap Bagian
+```bash
+python GMR-UIN-R1A/GMR-UIN-R1A-Data-Acquisition.py   # Blue kit
+python GMR-UIN-R1B/GMR-UIN-R1B-Data-Acquisition.py   # Yellow kit
+```
 
-### 1. `src`
+### 3. Calibration
 
-Folder `src` menyimpan dokumentasi teknis utama:
-- Skematik rangkaian elektronik.
-- Desain mekanika dan mekanotronika.
-- Buku manual lengkap untuk pemasangan, pengujian, dan penggunaan sistem.
-- File desain PCB untuk produksi dan validasi.
+```bash
+python magnetic_field_calibration.py
+```
 
-### 2. `GMR-UIN-R1A`
+---
 
-Versi pertama sistem, dikenal sebagai kit biru, dikembangkan di CV. Bolabot Techno Robotic Institute. Kodenya menyediakan GUI Python yang sudah terkalibrasi untuk pengukuran medan magnet secara real-time. Validasi dan protokol pengujian disimpan dalam struktur folder dan skrip di dalam direktori ini.
+## MQTT Interface
 
-### 3. `GMR-UIN-R1B`
+Both kits support MQTT-based remote monitoring via publisher/subscriber modules. Multiple patch versions exist under each kit's `MQTT-interface/` directory. For Mosquitto broker setup and full documentation, refer to the respective `MQTT-interface/README.md`.
 
-Versi kedua sistem, dikenal sebagai kit kuning, dikembangkan di Laboratorium Fisika Material UIN Sunan Gunung Djati Bandung. Perangkat lunak juga sudah terkalibrasi untuk akuisisi data real-time. Data eksperimen dan hasil validasi tersedia di folder ini.
+| Kit | Versions |
+|-----|----------|
+| R1A | `1.0.0`, `1.0.0.f`, `1.1.0` |
+| R1B | `1.1.0` |
 
-### 4. `main.ino`
+---
 
-Program Arduino utama untuk kedua versi sistem. Sketch ini membaca tegangan output sensor dari modul ADS1115, mengubahnya menjadi data digital, dan mengirimkannya melalui serial ke host PC. File ini berfungsi sebagai firmware utama untuk platform Arduino.
+## Machine Learning
 
-### 5. `magnetic_field_calibration.py`
+Pre-trained models for Fe₃O₄ classification/regression and glucose concentration prediction (with/without GOx enzyme) are available under `misc/machine-learning/`.
 
-Skrip kalibrasi utama sistem sensor GMR. Program ini telah diaplikasikan di kedua versi kit, menyediakan metode kalibrasi yang viable untuk kit lanjutan. `output-template.xlsx` digunakan sebagai format output untuk data kalibrasi, hasil pengukuran, dan dokumentasi sensitivitas.
+---
 
-## Panduan Penggunaan Singkat
+## Environment Setup
 
-1. Hubungkan perangkat GMR ke komputer menggunakan Arduino yang menjalankan `main.ino`.
-2. Jalankan salah satu skrip Python:
-   - `GMR-UIN-R1A/GMR-UIN-R1A-Data-Acquisition.py`
-   - `GMR-UIN-R1B/GMR-UIN-R1B-Data-Acquisition.py`
-3. Pastikan port serial (`COM3` atau port lain) disesuaikan sesuai perangkat Anda.
-4. Gunakan `magnetic_field_calibration.py` untuk analisis kalibrasi dan penyimpanan hasil ke template Excel.
+**Dependencies:** `pyserial`, `matplotlib`, `pandas`, `openpyxl`, `paho-mqtt`
 
-> Catatan: Untuk menjalankan GUI akuisisi data, diperlukan Python dengan dependensi `pyserial`, `matplotlib`, `pandas`, dan `tkinter`.
+```bash
+pip install pyserial matplotlib pandas openpyxl paho-mqtt
+```
 
-## Persiapan Lingkungan
+Adjust the serial port in the acquisition script (`COM3` / `/dev/ttyUSB0`) to match your system.
 
-### Windows
-
-1. Pasang Python 3.10+ dari https://www.python.org.
-2. Buka PowerShell dan jalankan:
-   ```powershell
-   python -m pip install --upgrade pip
-   python -m pip install pyserial matplotlib pandas openpyxl
-   ```
-3. Pastikan `tkinter` tersedia; biasanya sudah terpasang bersama Python resmi Windows.
-4. Sesuaikan port serial di `GMR-UIN-R1A/GMR-UIN-R1A-Data-Acquisition.py`, `GMR-UIN-R1B/GMR-UIN-R1B-Data-Acquisition.py`, atau `main.ino` ke port Arduino yang digunakan.
-
-### Linux / Raspbian
-
-1. Perbarui paket sistem:
-   ```bash
-   sudo apt update
-   sudo apt install python3 python3-pip python3-tk
-   ```
-2. Pasang dependensi Python:
-   ```bash
-   python3 -m pip install --upgrade pip
-   python3 -m pip install pyserial matplotlib pandas openpyxl
-   ```
-3. Jalankan skrip Python dengan:
-   ```bash
-   python3 GMR-UIN-R1A/GMR-UIN-R1A-Data-Acquisition.py
-   ```
-4. Jika menggunakan Raspberry Pi, pastikan hak akses ke port serial telah diberikan, dan port `ttyUSB0` atau `ttyACM0` telah terdeteksi.
-
-## Menjalankan Skrip
-
-### Windows
-
-- Buka PowerShell di folder repositori.
-- Jalankan:
-  ```powershell
-  python GMR-UIN-R1A/GMR-UIN-R1A-Data-Acquisition.py
-  ```
-- Atau untuk versi kedua:
-  ```powershell
-  python GMR-UIN-R1B/GMR-UIN-R1B-Data-Acquisition.py
-  ```
-- Untuk kalibrasi:
-  ```powershell
-  python magnetic_field_calibration.py
-  ```
-
-### Linux / Raspbian
-
-- Buka terminal di folder repositori.
-- Jalankan:
-  ```bash
-  python3 GMR-UIN-R1A/GMR-UIN-R1A-Data-Acquisition.py
-  ```
-- Atau:
-  ```bash
-  python3 GMR-UIN-R1B/GMR-UIN-R1B-Data-Acquisition.py
-  ```
-- Untuk kalibrasi:
-  ```bash
-  python3 magnetic_field_calibration.py
-  ```
+---
 
 ## Acknowledgements
 
-Penelitian ini didukung secara finansial oleh program MORA The Air Funds 2025 dari Kementerian Agama Republik Indonesia, bekerja sama dengan LPDP, Kementerian Keuangan, berdasarkan Kontrak No. 68/Dt.I.III/PP.05/12/2024 dan B-2594/Un.05/V.2/HM.01/12/2024, melalui hibah yang diberikan kepada Universitas Islam Negeri Sunan Gunung Djati Bandung untuk periode 2025–2027.
+Funded by **MORA The Air Funds 2025** — Ministry of Religious Affairs, Republic of Indonesia, in collaboration with LPDP, Ministry of Finance (Contract No. 68/Dt.I.III/PP.05/12/2024 and B-2594/Un.05/V.2/HM.01/12/2024), awarded to Universitas Islam Negeri Sunan Gunung Djati Bandung (2025–2027).
 
-## Lisensi & Kontak
+---
 
-Silakan merujuk ke dokumentasi dalam repositori atau hubungi tim pengembang untuk informasi lisensi dan penggunaan lebih lanjut.
+## License
+
+Refer to the documentation in this repository or contact the development team for licensing information.
