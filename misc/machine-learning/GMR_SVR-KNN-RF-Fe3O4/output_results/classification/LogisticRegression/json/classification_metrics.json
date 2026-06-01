@@ -1,0 +1,63 @@
+{
+    "model": "LogisticRegression",
+    "metrics": {
+        "accuracy": 0.9816666666666667,
+        "precision": 0.9829705582538826,
+        "recall": 0.9816666666666668,
+        "f1": 0.9816358966658124,
+        "roc_auc": 0.9999666666666666,
+        "cv_mean": 0.985,
+        "cv_std": 0.005055250296034367
+    },
+    "classification_report": {
+        "5 mg/mL": {
+            "precision": 1.0,
+            "recall": 0.91,
+            "f1-score": 0.9528795811518325,
+            "support": 100.0
+        },
+        "10 mg/mL": {
+            "precision": 0.9174311926605505,
+            "recall": 1.0,
+            "f1-score": 0.9569377990430622,
+            "support": 100.0
+        },
+        "20 mg/mL": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 100.0
+        },
+        "30 mg/mL": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1-score": 1.0,
+            "support": 100.0
+        },
+        "40 mg/mL": {
+            "precision": 1.0,
+            "recall": 0.98,
+            "f1-score": 0.98989898989899,
+            "support": 100.0
+        },
+        "50 mg/mL": {
+            "precision": 0.9803921568627451,
+            "recall": 1.0,
+            "f1-score": 0.9900990099009901,
+            "support": 100.0
+        },
+        "accuracy": 0.9816666666666667,
+        "macro avg": {
+            "precision": 0.9829705582538826,
+            "recall": 0.9816666666666668,
+            "f1-score": 0.9816358966658124,
+            "support": 600.0
+        },
+        "weighted avg": {
+            "precision": 0.9829705582538825,
+            "recall": 0.9816666666666667,
+            "f1-score": 0.9816358966658125,
+            "support": 600.0
+        }
+    }
+}
